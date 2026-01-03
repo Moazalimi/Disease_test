@@ -2,6 +2,7 @@ import pickle
 import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import joblib
 import os
@@ -36,6 +37,19 @@ for name, filename in model_files.items():
         print(f"✗ Error loading {filename}: {e}")
 
 app = FastAPI(title="Disease Prediction API")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:8081",
+        "http://localhost:8080",
+        "https://yourdomain.com"  # Replace with your actual deployed frontend URL
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Original request model
 class PredictRequest(BaseModel):
